@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#f6f1e8;
+    --bg-soft:#faf7f1;
+    --panel:#ffffff;
+    --border:#e7ddc9;
+    --border-soft:#efe8d9;
+    --text:#2b2620;
+    --text-muted:#8a7f6c;
+    --text-faint:#b3a892;
+    --accent:#c1793c;
+    --accent-dark:#9c5f2c;
+    --accent-soft:#f3e3d2;
+    --danger:#b3432e;
+    --danger-soft:#f6e2dc;
+    --shadow:0 6px 20px rgba(90,70,30,.08);
+    --shadow-sm:0 2px 8px rgba(90,70,30,.06);
+    --pm5-bg:#232220;
+    --pm5-panel:#2c2b28;
+    --pm5-text:#f4ede0;
+    --pm5-accent:#e8b45c;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter', Arial, Helvetica, sans-serif;
+}
+
+h1,h2,h3,.sectionTitle,header,.mastLogo{
+    font-family:'Poppins', Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:var(--bg);
+}
+
+.app{
+    max-width:430px;
+    margin:auto;
+    background:var(--panel);
+    height:100vh;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+}
+
+.content{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    min-width:0;
+    min-height:0;
+}
+
+header{
+    padding:22px 20px 20px;
+    text-align:center;
+    font-size:26px;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:var(--text);
+    border-bottom:1px solid var(--border-soft);
+    background:linear-gradient(180deg,var(--bg-soft),var(--panel));
+}
+
+header .headSub{
+    display:block;
+    font-family:'Inter',sans-serif;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-top:4px;
+}
+
+/* PAGINAS */
+
+.page{
+    display:none;
+    padding:18px;
+    padding-bottom:90px;
+    flex:1;
+    min-height:0;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+.page.active{
+    display:block;
+}
+
+/* ---------- HOME ---------- */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.card{
+    background:var(--bg-soft);
+    border:1px solid var(--border-soft);
+    border-radius:14px;
+    padding:16px 15px;
+    text-align:center;
+    box-shadow:var(--shadow-sm);
+}
+
+.card h3{
+    font-size:11px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-muted);
+    margin-bottom:8px;
+}
+
+.card p{
+    font-family:'Poppins',sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--text);
+}
+
+.graph{
+    border-radius:18px;
+    border:1px solid var(--border-soft);
+    background:var(--bg-soft);
+    padding:16px;
+    margin-bottom:20px;
+    color:var(--text-muted);
+    box-shadow:var(--shadow-sm);
+}
+
+.graph .graphTitle{
+    font-family:'Poppins',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:10px;
+}
+
+.graph select{
+    width:100%;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:13px;
+    margin-bottom:12px;
+    color:var(--text);
+}
+
+.graph canvas{
+    max-height:220px;
+}
+
+.bottomCards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.bigCard{
+    height:120px;
+    border-radius:18px;
+    background:linear-gradient(160deg,var(--accent-soft),var(--bg-soft));
+    border:1px solid var(--border-soft);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    color:var(--accent-dark);
+    padding:10px;
+}
+
+/* ---------- TRAIN ---------- */
+
+.sectionTitle{
+    font-family:'Poppins',sans-serif;
+    font-size:21px;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:16px;
+}
+
+.input{
+    background:var(--bg-soft);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:13px 14px;
+    margin-bottom:12px;
+}
+
+.input label{
+    display:block;
+    font-size:10px;
+    font-weight:600;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:4px;
+}
+
+.input input,
+.input select{
+    width:100%;
+    border:none;
+    background:transparent;
+    font-size:15px;
+    font-family:'Inter', Arial, Helvetica, sans-serif;
+    font-weight:500;
+    color:var(--text);
+    outline:none;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.line{
+    height:1px;
+    background:var(--border);
+    margin:20px 0;
+}
+
+/* ---------- Pantalla Ergo — estilo monitor Concept2 PM5 ---------- */
+
+.ergoLabel{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.ergoLabel span{
+    font-family:'Poppins',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:.1em;
+}
+
+.ergoLabel .ergoDot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--pm5-accent);
+    box-shadow:0 0 6px var(--pm5-accent);
+}
+
+.ergo{
+    border:1px solid #171614;
+    border-radius:10px;
+    overflow:hidden;
+    background:var(--pm5-bg);
+    box-shadow:inset 0 0 0 1px #3a3833, 0 10px 24px rgba(20,15,5,.28);
+    padding:10px;
+}
+
+.ergoHeader,
+.ergoTotal{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+    gap:6px;
+}
+
+.ergoHeader div,
+.ergoTotal div{
+    padding:9px 4px;
+    text-align:center;
+    font-family:'Share Tech Mono', monospace;
+}
+
+.ergoHeader{
+    margin-bottom:4px;
+}
+
+.ergoHeader div{
+    font-size:9px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#8a8477;
+    padding-bottom:4px;
+}
+
+.ergoTotal{
+    background:#1c1b19;
+    border-radius:6px;
+    margin-bottom:8px;
+}
+
+.ergoTotal div{
+    font-size:13px;
+    font-weight:400;
+    color:var(--pm5-text);
+    letter-spacing:.02em;
+}
+
+.ergoTotal div:first-child{
+    color:var(--pm5-accent);
+}
+
+.partial{
+    display:grid;
+    grid-template-columns:0.8fr 1fr 1fr 1fr 1fr 0.45fr;
+    gap:4px;
+    align-items:center;
+    padding:6px 2px;
+}
+
+.partial span.tramoLabel{
+    font-family:'Share Tech Mono', monospace;
+    font-size:10px;
+    padding-left:2px;
+    color:#9d9686;
+    white-space:nowrap;
+}
+
+.partial input{
+    width:100%;
+    border:1px solid #45423a;
+    border-radius:5px;
+    background:#141311;
+    padding:7px 3px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:12px;
+    letter-spacing:.02em;
+    text-align:center;
+    color:var(--pm5-text);
+    outline:none;
+}
+
+.partial input::placeholder{
+    color:#5c584d;
+}
+
+.partial input:focus{
+    border-color:var(--pm5-accent);
+    box-shadow:0 0 0 1px var(--pm5-accent) inset;
+}
+
+.partial button.removeRow{
+    border:none;
+    background:none;
+    color:#5c584d;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.partial button.removeRow:hover{
+    color:var(--danger);
+}
+
+.addPartialBtn{
+    width:100%;
+    border:1px dashed #45423a;
+    border-radius:6px;
+    background:transparent;
+    color:#9d9686;
+    padding:10px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:11px;
+    letter-spacing:.05em;
+    cursor:pointer;
+    margin-top:4px;
+}
+
+.addPartialBtn:hover{
+    border-color:var(--pm5-accent);
+    color:var(--pm5-accent);
+}
+
+/* botones */
+
+.trainButtons{
+    margin-top:25px;
+    display:flex;
+    justify-content:center;
+    gap:15px;
+}
+
+button{
+    border:none;
+    border-radius:12px;
+    padding:14px 22px;
+    font-family:'Poppins',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+}
+
+.ai{
+    background:var(--text);
+    color:var(--bg-soft);
+}
+
+.ai:hover{
+    box-shadow:var(--shadow);
+}
+
+.add{
+    background:var(--accent);
+    color:white;
+}
+
+.add:hover{
+    background:var(--accent-dark);
+    box-shadow:var(--shadow);
+}
+
+/* ---------- HISTORIAL ---------- */
+
+.filterSelect{
+    width:100%;
+    background:var(--bg-soft);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:14px;
+    margin-bottom:14px;
+    color:var(--text);
+}
+
+.resultCount{
+    font-size:12px;
+    color:var(--text-muted);
+    margin-bottom:10px;
+}
+
+.sessionCard{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--border-soft);
+    border-radius:16px;
+    padding:16px 16px 16px 20px;
+    margin-bottom:14px;
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+    transition:box-shadow .15s ease;
+}
+
+.sessionCard::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:5px;
+    background:var(--cat-color, var(--accent));
+}
+
+.sessionCard:hover{
+    box-shadow:var(--shadow);
+}
+
+.sessionTop{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.sessionDate{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.03em;
+    color:var(--text-muted);
+}
+
+.sessionType{
+    font-family:'Poppins',sans-serif;
+    font-size:16px;
+    font-weight:600;
+    color:var(--text);
+    margin:2px 0 7px;
+}
+
+.tag{
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:20px;
+    font-size:9px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+}
+
+.sessionActions{
+    display:flex;
+    gap:6px;
+    flex-shrink:0;
+}
+
+.iconBtn{
+    border:1px solid var(--border-soft);
+    background:var(--bg-soft);
+    color:var(--text-muted);
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    transition:background .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.editBtn:hover{
+    background:var(--accent-soft);
+    color:var(--accent-dark);
+    border-color:var(--accent);
+}
+
+.delBtn{
+    border:1px solid var(--border-soft);
+    background:var(--bg-soft);
+    color:var(--text-faint);
+}
+
+.delBtn:hover{
+    background:var(--danger-soft);
+    color:var(--danger);
+    border-color:var(--danger);
+}
+
+.sessionStats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.sessionStats div{
+    background:var(--bg-soft);
+    border:1px solid var(--border-soft);
+    border-radius:11px;
+    padding:9px 4px;
+    text-align:center;
+}
+
+.sessionStats .lbl{
+    font-size:9px;
+    font-weight:600;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    margin-bottom:3px;
+}
+
+.sessionStats .val{
+    font-family:'Share Tech Mono',monospace;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+}
+
+.expandBtn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    border:1px dashed var(--border);
+    background:transparent;
+    border-radius:10px;
+    padding:9px;
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.02em;
+    color:var(--text-muted);
+    cursor:pointer;
+    transition:background .12s ease, border-color .12s ease, color .12s ease;
+}
+
+.expandBtn:hover{
+    border-color:var(--accent);
+    color:var(--accent-dark);
+}
+
+.expandBtn .chev{
+    display:inline-block;
+    transition:transform .2s ease;
+    font-size:10px;
+}
+
+.expandBtn.open{
+    border-style:solid;
+    border-color:var(--text);
+    background:var(--text);
+    color:var(--bg-soft);
+}
+
+.expandBtn.open .chev{
+    transform:rotate(180deg);
+}
+
+.sessionExpand{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .22s ease;
+}
+
+.sessionExpand.show{
+    grid-template-rows:1fr;
+}
+
+.sessionExpand > div{
+    overflow:hidden;
+}
+
+.splitDetail{
+    margin-top:10px;
+    background:var(--bg-soft);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:10px;
+}
+
+.splitDetailRow{
+    display:grid;
+    grid-template-columns:0.6fr 1.2fr 1fr 1fr 0.8fr;
+    gap:4px;
+    padding:7px 4px;
+    font-family:'Share Tech Mono',monospace;
+    font-size:11px;
+    color:var(--text);
+    border-bottom:1px solid var(--border-soft);
+}
+
+.splitDetailRow:nth-child(even){
+    background:rgba(0,0,0,.015);
+}
+
+.splitDetailRow.total{
+    font-weight:700;
+    background:var(--accent-soft);
+    border-radius:8px;
+    border-bottom:none;
+    color:var(--accent-dark);
+    margin-top:2px;
+}
+
+.splitDetailHeader{
+    display:grid;
+    grid-template-columns:0.6fr 1.2fr 1fr 1fr 0.8fr;
+    gap:4px;
+    padding:0 4px 7px;
+    font-family:'Inter',sans-serif;
+    font-size:9px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--text-faint);
+}
+
+.emptyMsg{
+    text-align:center;
+    color:var(--text-faint);
+    font-style:italic;
+    padding:30px 10px;
+    font-size:13px;
+}
+
+/* ---------- SETTINGS ---------- */
+
+.settingsBtn{
+    width:100%;
+    text-align:left;
+    background:var(--bg-soft);
+    border:1px solid var(--border-soft);
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:12px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    font-weight:500;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.settingsBtn:hover{
+    background:var(--accent-soft);
+    border-color:var(--accent);
+}
+
+.settingsBtn.danger{
+    color:var(--danger);
+}
+
+.settingsBtn.danger:hover{
+    background:var(--danger-soft);
+    border-color:var(--danger);
+}
+
+.settingsStatus{
+    font-size:12px;
+    color:var(--text-muted);
+    text-align:center;
+    margin-top:6px;
+    margin-bottom:20px;
+}
+
+/* ---------- MODAL / TOAST ---------- */
+
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(30,24,14,.45);
+    z-index:200;
+    align-items:center;
+    justify-content:center;
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.modal{
+    background:var(--panel);
+    border-radius:16px;
+    padding:26px;
+    max-width:320px;
+    width:85%;
+    box-shadow:var(--shadow);
+}
+
+.modal h4{
+    font-family:'Poppins',sans-serif;
+    font-size:17px;
+    color:var(--text);
+    margin-bottom:10px;
+}
+
+.modal p{
+    font-size:13px;
+    color:var(--text-muted);
+    line-height:1.6;
+    margin-bottom:20px;
+}
+
+.modalBtns{
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+}
+
+.modalBtns button{
+    padding:10px 16px;
+    font-size:13px;
+}
+
+.modalBtns .cancel{
+    background:var(--bg-soft);
+    color:var(--text);
+}
+
+.modalBtns .confirm{
+    background:var(--danger);
+    color:#fff;
+}
+
+.modalBtns .confirm:disabled{
+    background:var(--border);
+    color:var(--text-faint);
+    cursor:not-allowed;
+}
+
+.confirmTypeBox{
+    margin-bottom:18px;
+}
+
+.confirmTypeBox label{
+    display:block;
+    font-size:12px;
+    color:var(--text-muted);
+    margin-bottom:8px;
+    line-height:1.5;
+}
+
+.confirmTypeBox input{
+    width:100%;
+    background:var(--bg-soft);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:11px 12px;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.04em;
+    color:var(--text);
+    outline:none;
+}
+
+.confirmTypeBox input:focus{
+    border-color:var(--danger);
+}
+
+.toast{
+    position:fixed;
+    bottom:90px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--text);
+    color:var(--bg-soft);
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:500;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s;
+    z-index:300;
+    max-width:85%;
+    text-align:center;
+    box-shadow:var(--shadow);
+}
+
+.toast.show{
+    opacity:1;
+}
+
+/* ---------- MENU ---------- */
+
+nav{
+    height:70px;
+    border-top:1px solid var(--border-soft);
+    display:flex;
+    background:var(--panel);
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    max-width:430px;
+    margin:0 auto;
+    z-index:100;
+    box-shadow:0 -2px 10px rgba(90,70,30,.08);
+}
+
+nav button{
+    flex:1;
+    border:none;
+    border-radius:0;
+    background:var(--panel);
+    font-family:'Poppins',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    color:var(--text-muted);
+    padding:14px 4px;
+}
+
+nav button:hover{
+    background:var(--bg-soft);
+    color:var(--text);
+}
+
+nav button.navActive{
+    color:var(--accent-dark);
+    font-weight:700;
+}
+
+/* ============================================================
+  ADAPTACIÓN A PANTALLAS GRANDES (PC / TABLET APAISADA)
+   ============================================================ */
+
+@media (min-width:900px){
+
+    body{
+        display:flex;
+        justify-content:center;
+        padding:36px 20px;
+    }
+
+    .app{
+        max-width:1080px;
+        width:100%;
+        height:auto;
+        min-height:auto;
+        flex-direction:row;
+        border-radius:20px;
+        overflow:hidden;
+        box-shadow:var(--shadow);
+        border:1px solid var(--border-soft);
+    }
+
+    .content{
+        order:2;
+        min-height:82vh;
+    }
+
+    nav{
+        order:1;
+        position:static;
+        flex-direction:column;
+        width:210px;
+        height:auto;
+        border-top:none;
+        border-right:1px solid var(--border-soft);
+        background:var(--bg-soft);
+        padding:26px 14px;
+        gap:6px;
+        justify-content:flex-start;
+        margin:0;
+        box-shadow:none;
+    }
+
+    nav button{
+        flex:none;
+        width:100%;
+        text-align:left;
+        border-radius:10px;
+        padding:13px 16px;
+        background:transparent;
+    }
+
+    nav button:hover{
+        background:var(--accent-soft);
+    }
+
+    nav button.navActive{
+        background:var(--accent);
+        color:#fff;
+    }
+
+    header{
+        text-align:left;
+        padding:28px 40px 22px;
+    }
+
+    .page{
+        padding:32px 40px 50px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .bottomCards{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .row{
+        grid-template-columns:1fr 1fr 1fr;
+    }
+
+    .sessionCard{
+        display:grid;
+        grid-template-columns:1fr 2fr;
+        gap:16px;
+        align-items:start;
+    }
+
+    .sessionStats{
+        grid-column:1 / -1;
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .sessionExpand{
+        grid-column:1 / -1;
+    }
+
+    .expandBtn{
+        grid-column:1 / -1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="content">
+
+<header>
+Remo
+<span class="headSub"> Training Log</span>
+</header>
+
+<!-- HOME -->
+
+<section class="page active" id="home">
+
+<div class="stats">
+
+<div class="card">
+<h3>Distancia Total</h3>
+<p id="stat-dist">---</p>
+</div>
+
+<div class="card">
+<h3>Sesiones</h3>
+<p id="stat-sessions">---</p>
+</div>
+
+<div class="card">
+<h3>Mejor split 2K</h3>
+<p id="stat-avg">---</p>
+</div>
+
+<div class="card">
+<h3>Mejor Tiempo 2K</h3>
+<p id="stat-best">---</p>
+</div>
+
+</div>
+
+<div class="graph">
+<div class="graphTitle" id="chart-label">Grafico — todos los ejercicios</div>
+<select id="chart-filter-select" onchange="setChartFilter(this.value)"></select>
+<canvas id="areaChart" height="220"></canvas>
+</div>
+
+<div class="bottomCards">
+
+<div class="bigCard">
+<div class="bigCardInner">
+<div class="bigCardValue" id="days-to-race">---</div>
+<div class="bigCardLabel">Días pre-regata</div>
+</div>
+</div>
+
+<div class="bigCard">
+<div class="bigCardInner">
+<div class="bigCardValue" id="load-week">---</div>
+<div class="bigCardLabel">Semana de carga</div>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- TRAIN -->
+
+<section class="page" id="train">
+
+<div class="sectionTitle" id="train-title">
+Train
+</div>
+
+<div class="editBanner" id="edit-banner" style="display:none;">
+<span>✎ Editando sesión guardada</span>
+<button type="button" class="cancelEditBtn" onclick="cancelEdit()">Cancelar</button>
+</div>
+
+<div class="input">
+<label>Tipo de trabajo</label>
+<select id="f-cat">
+<option value="z1">Zona 1</option>
+<option value="z2" selected>Zona 2</option>
+<option value="intervals">Intervalos</option>
+<option value="sprint">Sprint</option>
+<option value="test">Test</option>
+<option value="watts">Watts</option>
+</select>
+<div class="zoneHint" id="zone-hint">Cargá el SPM para sugerir la zona automáticamente</div>
+</div>
+
+<div class="line"></div>
+
+<div class="row">
+
+<div class="input">
+<label>Name</label>
+<input type="text" id="f-type" placeholder="ej: 2000m, 30:00">
+</div>
+
+<div class="input">
+<label>Tiempo total</label>
+<input type="text" id="f-totaltime" placeholder="ej: 20:00">
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input">
+<label>Fecha</label>
+<input type="date" id="f-date">
+</div>
+
+<div class="input">
+<label>Metros</label>
+<input type="number" id="f-meters" placeholder="ej: 2000">
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input">
+<label>/500m</label>
+<input type="text" id="f-split" placeholder="ej: 2:05.3 ">
+</div>
+
+<div class="input">
+<label>SPM</label>
+<input type="number" id="f-spm" placeholder="ej: 22" oninput="updateZoneHint()">
+</div>
+
+</div>
+
+<div class="zoneDetectRow">
+<div id="zone-suggestion">Sin sugerencia todavía</div>
+<button type="button" class="zoneApplyBtn" onclick="applyZoneSuggestion()">Aplicar zona sugerida</button>
+</div>
+
+<div class="line"></div>
+
+<div class="ergoLabel">
+<span>Ergo</span>
+<span class="ergoDot"></span>
+</div>
+
+<div class="ergo">
+
+<div class="ergoHeader">
+<div>Tiempo</div>
+<div>Metros</div>
+<div>/500</div>
+<div>SPM</div>
+</div>
+
+<div class="ergoTotal">
+<div>Total</div>
+<div>(auto)</div>
+<div>arriba ↑</div>
+<div>↑</div>
+</div>
+
+<div id="parciales-container"></div>
+
+<button type="button" class="addPartialBtn" onclick="addParcialRow()">+ Agregar parcial</button>
+
+</div>
+
+<div class="line"></div>
+
+<div class="aiImportBox">
+<div class="aiImportHeader">
+<span>Cargar desde foto con IA</span>
+<button type="button" class="aiCopyBtn" onclick="copyAiPrompt()">Copiar instrucciones para la IA</button>
+</div>
+<p class="aiImportHelp">Sacale una foto a la pantalla del PM5 y pedile a ChatGPT (u otra IA) que te devuelva el código con el botón de arriba. Después pegá lo que te responda acá abajo.</p>
+<textarea id="ai-code-input" placeholder='Pegá acá el código que te devuelve la IA, por ejemplo:
+{"date":"2026-07-22","type":"2000m","meters":2000,"split":"1:47.7","totaltime":"7:10.8","spm":26,"cat":"sprint","parciales":[]}'></textarea>
+<button type="button" class="aiLoadBtn" onclick="loadFromAiCode()">Cargar datos en el formulario</button>
+</div>
+
+<div class="trainButtons">
+
+<button class="add" id="btn-add-session" onclick="addSession()">
+Agregar trabajo
+</button>
+
+</div>
+
+</section>
+
+<!-- HISTORIAL -->
+
+<section class="page" id="historial">
+
+<div class="sectionTitle">
+Historial
+</div>
+
+<select class="filterSelect" id="table-filter-select" onchange="setTableFilter(this.value)"></select>
+
+<div class="resultCount" id="result-count"></div>
+
+<div id="rows"></div>
+
+</section>
+
+<!-- SETTINGS -->
+
+<section class="page" id="settings">
+
+<div class="sectionTitle">Settings</div>
+
+<div class="row">
+
+<div class="input">
+<label>Fecha de la regata</label>
+<input type="date" id="race-date-input">
+</div>
+
+<div class="input">
+<label>Inicio bloque de carga</label>
+<input type="date" id="load-start-input">
+</div>
+
+</div>
+
+<button class="settingsBtn" onclick="saveDatesConfig()">
+<span>Guardar fechas</span><span>📅</span>
+</button>
+
+<div class="settingsStatus" id="dates-status">Configurá las fechas para ver la cuenta regresiva en Home.</div>
+
+<div class="line"></div>
+
+<button class="settingsBtn" onclick="syncNow()">
+<span>Sincronizar ahora</span><span>⟳</span>
+</button>
+
+<div class="settingsStatus" id="api-status">Conectado a Google Sheets.</div>
+
+<div class="line"></div>
+
+<button class="settingsBtn" onclick="exportJSON()">
+<span>Guardar .json</span><span>⭳</span>
+</button>
+
+<button class="settingsBtn" onclick="document.getElementById('import-input').click()">
+<span>Cargar .json</span><span>⭱</span>
+</button>
+
+<button class="settingsBtn" onclick="document.getElementById('import-rowcoach-input').click()">
+<span>Cargar backup RowCoach</span><span>⭱</span>
+</button>
+
+<button class="settingsBtn" onclick="exportCSV()">
+<span>Exportar CSV</span><span>⭳</span>
+</button>
+
+<button class="settingsBtn danger" onclick="showClearConfirm()">
+<span>Resetear base de datos</span><span>✕</span>
+</button>
+
+<input type="file" id="import-input" accept=".json" style="display:none" onchange="importJSON(event)">
+<input type="file" id="import-rowcoach-input" accept=".json" style="display:none" onchange="importRowCoachJSON(event)">
+
+<div class="settingsStatus" id="db-status">Cargando…</div>
+
+</section>
+
+</div>
+
+<nav>
+
+<button id="nav-train" onclick="changePage('train')">
+Train
+</button>
+
+<button id="nav-home" onclick="changePage('home')">
+Home
+</button>
+
+<button id="nav-historial" onclick="changePage('historial')">
+Historial
+</button>
+
+<button id="nav-settings" onclick="changePage('settings')">
+Settings
+</button>
+
+</nav>
+
+</div>
+
+<div class="overlay" id="clear-overlay">
+  <div class="modal">
+    <h4>Resetear base de datos</h4>
+    <p>Esto eliminará todas las sesiones y cargará los datos originales. Asegurate de haber guardado el .json antes.</p>
+    <div class="modalBtns">
+      <button class="cancel" onclick="document.getElementById('clear-overlay').classList.remove('show')">Cancelar</button>
+      <button class="confirm" onclick="clearDB()">Sí, resetear</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="delete-session-overlay">
+  <div class="modal">
+    <h4>Eliminar sesión</h4>
+    <p>Vas a eliminar <strong id="delete-session-desc">esta sesión</strong> de forma permanente. Esta acción no se puede deshacer.</p>
+    <div class="confirmTypeBox">
+      <label for="delete-confirm-input">Escribí <strong>ELIMINAR</strong> para confirmar</label>
+      <input type="text" id="delete-confirm-input" placeholder="ELIMINAR" autocomplete="off" oninput="checkDeleteConfirmInput()">
+    </div>
+    <div class="modalBtns">
+      <button class="cancel" onclick="cancelDeleteSession()">Cancelar</button>
+      <button class="confirm" id="delete-confirm-btn" onclick="confirmDeleteSession()" disabled>Sí, eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+// BUSCA ESTO:
+function changePage(page){
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  document.getElementById(page).classList.add("active");
+
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("navActive"));
+  document.getElementById("nav-"+page).classList.add("navActive");
+
+  if(page === "home"){
+    setTimeout(()=>{ if(areaChart) areaChart.resize(); },50);
+  }
+
+  // 🔄 Cargar datos frescos de Google Sheets al cambiar de página
+  if(page === "historial" || page === "home"){
+    loadFromCloud();
+  }
+}
+
+/* ── Generador de Clave Única Unificada ── */
+function getUniqueKey(s) {
+  if (!s) return "";
+  const iso = String(s.iso || "").trim();
+  const type = String(s.type || "").trim().toLowerCase();
+  const meters = Number(s.meters) || 0;
+  return `${iso}|${type}|${meters}`;
+}
+
+/* ── Clave única normalizada (previene duplicados por espacios o formato) ── */
+function getUniqueKey(s) {
+  if (!s) return "";
+  const iso = String(s.iso || "").trim();
+  const type = String(s.type || "").trim().toLowerCase();
+  const meters = Number(s.meters) || 0;
+  return `${iso}|${type}|${meters}`;
+}
+
+
+const LS_KEY="stroke_journal_v2";
+let DB=[];
+
+const CAT={
+  steady:{color:"#c1793c",bg:"#f3e3d2",label:"Ritmo sostenido"},
+  z1:{color:"#6f8f52",bg:"#e9f0e0",label:"Zona 1"},
+  z2:{color:"#c1793c",bg:"#f3e3d2",label:"Zona 2"},
+  intervals:{color:"#3d6b6b",bg:"#e2edec",label:"Intervalos"},
+  sprint:{color:"#b3432e",bg:"#f6e2dc",label:"Sprint"},
+  test:{color:"#7c4a63",bg:"#f0e3ea",label:"Test"},
+  watts:{color:"#a8791b",bg:"#f6ecd7",label:"Watts"},
+};
+
+/* ── Helpers ── */
+function isTimeSplit(s){ return /^\d+:\d/.test(s); }
+function toSec(s){ const[m,r]=s.split(":");return +m*60+parseFloat(r); }
+function fmtSec(s){ const m=Math.floor(s/60);const sec=(s%60).toFixed(2).padStart(5,"0");return `${m}:${sec}`; }
+function fmtTotal(s){ const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const sec=Math.round(s%60);const ss=String(sec).padStart(2,"0");if(h>0)return `${h}:${String(m).padStart(2,"0")}:${ss}`;return `${m}:${ss}`; }
+function fmtDate(iso){const d=new Date(iso+"T00:00:00");const months=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];return `${String(d.getDate()).padStart(2,"0")} ${months[d.getMonth()]} ${d.getFullYear()}`;}
+function normType(t){
+  return String(t ?? "")
+    .replace(/\s+/g, "")
+    .toLowerCase();
+}
+function validSplit(v){ return /^(\d+:\d{2}\.\d{1,2}|W\s?\d+)$/i.test(v.trim()); }
+function getRestSeconds(type){
+  if(!type) return 0;
+  const m=type.match(/(\d+)\s*[×x]\s*[^/]+\/\s*(\d+):(\d{2})\s*r/i);
+  if(!m) return 0;
+  const reps=parseInt(m[1],10);
+  if(!reps||reps<2) return 0;
+  const restSec=parseInt(m[2],10)*60+parseInt(m[3],10);
+  return (reps-1)*restSec;
+}
+
+function saveLS(){localStorage.setItem(LS_KEY,JSON.stringify(DB));}
+function loadLS(){try{const raw=localStorage.getItem(LS_KEY);if(raw){DB=JSON.parse(raw);return true;}}catch(e){}return false;}
+
+/* ── Conexión a Google Sheets (API vía Apps Script) ── */
+const API_URL = "https://script.google.com/macros/s/AKfycbyKXLUJQur5kmu2bbXPe_gOClmJ3y30JkX3fjHrTl1WkA6ddE5oeQN8Cof0b0cj5p6E7A/exec";
+
+/* ── Generador unificado de Clave Única ── */
+function getUniqueKey(s) {
+  if (!s) return "";
+  const iso = String(s.iso || "").trim();
+  const type = String(s.type || "").trim().toLowerCase();
+  const meters = Number(s.meters) || 0;
+  return `${iso}|${type}|${meters}`;
+}
+
+/* ── Sincronización Bidireccional Espejo ── */
+/* ── Carga directa desde Google Sheets (Fuente Única de Verdad) ── */
+async function loadFromCloud() {
+  if (!API_URL) {
+    document.getElementById("api-status").textContent = "Falta configurar API_URL.";
+    return;
+  }
+
+  try {
+    document.getElementById("api-status").textContent = "Cargando desde Google Sheets...";
+
+    let remote = await postToApi("get");
+
+    if (remote === null) {
+      document.getElementById("api-status").textContent = "Error al conectar con Google Sheets.";
+      return;
+    }
+
+    if (remote && typeof remote === "object" && !Array.isArray(remote)) {
+      remote = remote.data || remote.sessions || remote.result || remote.rows || [];
+    }
+
+    if (!Array.isArray(remote)) {
+      throw new Error("Respuesta inválida del servidor.");
+    }
+
+    // Reemplazar los datos en memoria únicamente con lo que viene de la nube
+    DB = remote.map(s => {
+      s.meters = Number(s.meters) || 0;
+      return s;
+    });
+
+    refresh();
+    document.getElementById("api-status").textContent = "Conectado a " + shortUrl(API_URL);
+
+  } catch (err) {
+    console.error("Error al cargar datos:", err);
+    document.getElementById("api-status").textContent = "Error de carga: " + err.message;
+  }
+}
+
+async function postToApi(action,payload){
+  if(!API_URL) return null;
+  try{
+    const res=await fetch(API_URL,{
+      method:"POST",
+      body:JSON.stringify({action,...payload})
+    });
+    if(!res.ok){
+      throw new Error("El servidor respondió con un error ("+res.status+").");
+    }
+    const text=await res.text();
+    if(!text) return null;
+    try{
+      return JSON.parse(text);
+    }catch(e){
+      throw new Error("La respuesta del servidor no es JSON válido.");
+    }
+  }catch(err){
+    console.error("Error de conexión con la API:",err);
+    showToast("Se guardó local pero no se pudo sincronizar con Sheets.");
+    return null;
+  }
+}
+
+function shortUrl(u){
+  const m=u.match(/\/s\/([^/]+)\//);
+  return m?"…"+m[1].slice(-6)+"/exec":u;
+}
+
+let chartFilter="avg_z2",tableFilter="todos",areaChart=null,lastSorted=[];
+
+async function init(){
+  // Fijar la fecha actual por defecto
+  document.getElementById("f-date").value = new Date().toISOString().split("T")[0];
+  
+  // Agregar un tramo inicial
+  addParcialRow();
+
+  // Cargar datos directamente desde Google Sheets
+  await loadFromCloud();
+}
+
+window.addEventListener("DOMContentLoaded", init);
+
+function refresh(){
+  const sorted = [...DB].sort((a, b) =>
+    String(b?.iso || "").localeCompare(String(a?.iso || ""))
+);
+  lastSorted=sorted;
+  updateStats(sorted);buildChartFilters(sorted);buildTableFilters(sorted);buildChart(sorted);renderRows(sorted);
+  updateCountdown();
+  document.getElementById("db-status").textContent="Guardado localmente · "+DB.length+" registros";
+  if(API_URL){
+    document.getElementById("api-status").textContent="Conectado a "+shortUrl(API_URL)+" · "+DB.length+" registros";
+  }else{
+    document.getElementById("api-status").textContent="Sin conectar — los datos se guardan solo en este navegador.";
+  }
+}
+
+/* ── Fechas: regata y bloque de carga ── */
+const DATES_KEY="remo_dates_config";
+
+function loadDatesConfig(){
+  try{
+    const raw=localStorage.getItem(DATES_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {raceDate:"",loadStart:""};
+}
+
+function saveDatesConfig(){
+  const raceDate=document.getElementById("race-date-input").value;
+  const loadStart=document.getElementById("load-start-input").value;
+  localStorage.setItem(DATES_KEY,JSON.stringify({raceDate,loadStart}));
+  document.getElementById("dates-status").textContent="Fechas guardadas ✓";
+  updateCountdown();
+  showToast("Fechas actualizadas.");
+}
+
+function updateCountdown(){
+  const cfg=loadDatesConfig();
+  document.getElementById("race-date-input").value=cfg.raceDate||"";
+  document.getElementById("load-start-input").value=cfg.loadStart||"";
+
+  const today=new Date();
+  today.setHours(0,0,0,0);
+
+  const daysEl=document.getElementById("days-to-race");
+  if(cfg.raceDate){
+    const race=new Date(cfg.raceDate+"T00:00:00");
+    const diffDays=Math.round((race-today)/86400000);
+    daysEl.textContent = diffDays>=0 ? diffDays : "0";
+  }else{
+    daysEl.textContent="---";
+  }
+
+  const weekEl=document.getElementById("load-week");
+  if(cfg.loadStart){
+    const start=new Date(cfg.loadStart+"T00:00:00");
+    const diffDays=Math.round((today-start)/86400000);
+    const week=Math.floor(diffDays/7)+1;
+    weekEl.textContent = week>0 ? week : (diffDays<0?"—":"1");
+  }else{
+    weekEl.textContent="---";
+  }
+}
+
+function updateStats(sorted){
+  // 1. Distancia acumulada total de todas las sesiones
+  const totalM = sorted.reduce((a, b) => a + (Number(b.meters) || 0), 0);
+  
+  // 2. Filtrar UNICAMENTE los 2000m cuya categoría sea "test"
+  const rows2k = sorted.filter(w => {
+    const is2k = Number(w.meters) === 2000;
+    const isTest = String(w.cat || "").trim().toLowerCase() === "test";
+    const hasValidSplit = isTimeSplit(w.split);
+    return is2k && isTest && hasValidSplit;
+  });
+  
+  let best2kSplit = null;
+  let best2kTotal = null;
+
+  if (rows2k.length > 0) {
+    // Convertir y buscar el mejor tiempo
+    const times2k = rows2k.map(w => {
+      const splitSec = toSec(w.split);
+      let totalSec = splitSec * 4; // 4 parciales de 500m en 2000m
+
+      // Si se cargó un Tiempo Total específico en la sesión, se usa
+      if (w.totaltime && isTimeSplit(w.totaltime)) {
+        totalSec = toSec(w.totaltime);
+      }
+      return { splitSec, totalSec };
+    });
+
+    // Encontrar el registro con menor tiempo total
+    const bestRow = times2k.reduce((min, cur) => cur.totalSec < min.totalSec ? cur : min, times2k[0]);
+    best2kSplit = bestRow.splitSec;
+    best2kTotal = bestRow.totalSec;
+  }
+
+  // 3. Renderizar en la pantalla
+  document.getElementById("stat-dist").textContent = (totalM / 1000).toFixed(1) + "k";
+  document.getElementById("stat-sessions").textContent = sorted.length;
+  
+  // Muestra el paso promedio/500m del mejor 2k
+  document.getElementById("stat-avg").textContent = best2kSplit ? fmtSec(best2kSplit) : "---";
+  
+  // Muestra el tiempo total del mejor 2k manteniendo minutos y segundos con décimas
+  document.getElementById("stat-best").textContent = best2kTotal ? fmtSec(best2kTotal) : "---";
+}
+
+function buildChartFilters(sorted){
+  const types=[...new Set(sorted.filter(w=>isTimeSplit(w.split)).map(w=>normType(w.type)))].sort();
+  const opts=["avg_z1","avg_z2",...types];
+  const sel=document.getElementById("chart-filter-select");
+  const labels={avg_z1:"Promedio Zona 1",avg_z2:"Promedio Zona 2"};
+  sel.innerHTML=opts.map(t=>`<option value="${t}"${chartFilter===t?" selected":""}>${labels[t]||t}</option>`).join("");
+}
+
+function buildTableFilters(sorted){
+  const types=[...new Set(sorted.map(w=>normType(w.type)))].sort();
+  const opts=["todos",...types];
+  const sel=document.getElementById("table-filter-select");
+  sel.innerHTML=opts.map(t=>`<option value="${t}"${tableFilter===t?" selected":""}>${t==="todos"?"Todos los ejercicios":t}</option>`).join("");
+}
+
+function matchesZone(w,zoneCat){
+  if(w.cat===zoneCat) return true;
+  if(zoneCat==="z2" && w.cat==="steady") return true;
+  return false;
+}
+
+function buildChart(sorted){
+  const isZoneAvg = chartFilter==="avg_z1" || chartFilter==="avg_z2";
+  const canvas=document.getElementById("areaChart");
+  if(!canvas) return;
+  const ctx=canvas.getContext("2d");
+
+  let data, color, label;
+  if(isZoneAvg){
+    const zoneCat = chartFilter==="avg_z1" ? "z1" : "z2";
+    data=sorted.filter(w=>isTimeSplit(w.split) && matchesZone(w,zoneCat));
+    data=[...data].sort((a,b)=>a.iso.localeCompare(b.iso));
+    const meta=CAT[zoneCat];
+    color=meta.color;
+    label="Tendencia de paso — "+meta.label;
+  }else{
+    data=sorted.filter(w=>isTimeSplit(w.split) && normType(w.type)===chartFilter);
+    data=[...data].sort((a,b)=>a.iso.localeCompare(b.iso));
+    color="#c1793c";
+    label="Tendencia de paso — "+chartFilter;
+  }
+  document.getElementById("chart-label").textContent=label;
+
+  if(areaChart) areaChart.destroy();
+  areaChart=new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:data.map(w=>w.date),
+      datasets:[{
+        data:data.map(w=>toSec(w.split)),
+        borderColor:color,
+        backgroundColor:color+"22",
+        fill:true,
+        tension:0.3,
+        pointRadius:3,
+        pointBackgroundColor:data.map(w=>(CAT[w.cat]||CAT.steady).color),
+        pointHoverRadius:5,
+        borderWidth:2
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          callbacks:{
+            label:ctx=>{
+              const w=data[ctx.dataIndex];
+              const lines=[`Split: ${fmtSec(ctx.parsed.y)} /500m`,`Distancia: ${w.meters.toLocaleString()}m`];
+              if(w.totaltime) lines.push(`T. Total: ${w.totaltime}`);
+              else lines.push(`T. Total: ${fmtTotal(toSec(w.split)*w.meters/500+getRestSeconds(w.type))}`);
+              if(w.spm) lines.push(`SPM: ${w.spm}`);
+              return lines;
+            },
+            title:ctx=>{
+              const w=data[ctx[0].dataIndex];
+              return w.date+" – "+w.type;
+            }
+          }
+        }
+      },
+      scales:{
+        y:{reverse:true,ticks:{callback:v=>fmtSec(v),font:{size:9},color:"#8a7f6c"},grid:{color:"#efe8d9"},border:{display:false}},
+        x:{ticks:{font:{size:7},maxRotation:50,color:"#8a7f6c"},grid:{display:false},border:{display:false}}
+      }
+    }
+  });
+}
+
+function renderRows(sorted){
+  let data=[...sorted];
+  if(tableFilter!=="todos") data=data.filter(w=>normType(w.type)===tableFilter);
+  document.getElementById("result-count").textContent=data.length===sorted.length?"":data.length+" resultado"+(data.length!==1?"s":"");
+  if(!data.length){document.getElementById("rows").innerHTML=`<div class="emptyMsg">Sin sesiones para este filtro.</div>`;return;}
+
+  document.getElementById("rows").innerHTML=data.map((w,i)=>{
+    const meta=CAT[w.cat]||CAT.steady;
+
+    let totalDisp="—";
+    if(w.totaltime){totalDisp=w.totaltime;}
+    else if(isTimeSplit(w.split)){
+      const rowingSec=toSec(w.split)*w.meters/500;
+      totalDisp=fmtTotal(rowingSec+getRestSeconds(w.type));
+    }
+
+    const hasPar=w.parciales&&w.parciales.length>0;
+    const uid="r"+i+"_"+(w.iso?.replace(/-/g,'')||'');
+    const safeType=w.type?.replace(/'/g,"&#39;")||'';
+
+    let detailHTML='';
+    if(hasPar){
+      detailHTML=`<div class="splitDetailHeader"><span>#</span><span>T. acum.</span><span>Metros</span><span>/500m</span><span>SPM</span></div>
+        ${w.parciales.map((p)=>`<div class="splitDetailRow">
+          <span>${p.label||'—'}</span>
+          <span>${p.time||'—'}</span>
+          <span>${p.meters?(p.meters.toLocaleString()+'m'):'—'}</span>
+          <span>${p.split||'—'}</span>
+          <span>${p.spm||'—'}</span>
+        </div>`).join('')}`;
+    }
+
+    return `<div class="sessionCard">
+      <div class="sessionTop">
+        <div>
+          <div class="sessionDate">${w.date} · ${w.meters.toLocaleString()}m</div>
+          <div class="sessionType">${w.type}</div>
+          <span class="tag" style="background:${meta.bg};color:${meta.color};">${meta.label}</span>
+        </div>
+        <div class="sessionActions">
+          <button class="editBtn" onclick="editSession('${w.iso}','${safeType}',${w.meters})" title="Editar">✎</button>
+          <button class="delBtn" onclick="deleteSession('${w.iso}','${safeType}',${w.meters})" title="Eliminar">✕</button>
+        </div>
+      </div>
+
+      <div class="sessionStats">
+        <div><div class="lbl">/500m</div><div class="val" style="color:${meta.color}">${w.split}</div></div>
+        <div><div class="lbl">Total</div><div class="val">${totalDisp}</div></div>
+        <div><div class="lbl">SPM</div><div class="val">${w.spm||'—'}</div></div>
+      </div>
+
+      ${hasPar ? `
+        <button class="expandBtn" id="eb-${uid}" onclick="toggleDetail('${uid}', ${w.parciales.length})">▸ Ver ${w.parciales.length} split${w.parciales.length!==1?'s':''}</button>
+        <div class="sessionExpand" id="det-${uid}">
+          <div>
+            <div class="splitDetail">${detailHTML}</div>
+          </div>
+        </div>
+      ` : ''}
+    </div>`;
+  }).join("");
+}
+
+function toggleDetail(uid, count){
+  const d=document.getElementById('det-'+uid);
+  const b=document.getElementById('eb-'+uid);
+  if(!d || !b) return;
+  const open=d.classList.toggle('show');
+  b.classList.toggle('open',open);
+  const label = count !== 1 ? 'splits' : 'split';
+  b.textContent = (open ? '▾ Ocultar' : '▸ Ver') + ' ' + count + ' ' + label;
+}
+
+function toggleDetail(uid, count){
+  const d=document.getElementById('det-'+uid);
+  const b=document.getElementById('eb-'+uid);
+  if(!d || !b) return;
+  const open=d.classList.toggle('show');
+  b.classList.toggle('open',open);
+  const label = count !== 1 ? 'splits' : 'split';
+  b.textContent = (open ? '▾ Ocultar' : '▸ Ver') + ' ' + count + ' ' + label;
+}
+
+
+function toggleDetail(uid){
+  const d=document.getElementById('det-'+uid);
+  const b=document.getElementById('eb-'+uid);
+  if(!d) return;
+  const open=d.classList.toggle('show');
+  b.classList.toggle('open',open);
+  const num=b.textContent.match(/\d+/)?.[0]||'';
+  const label=`split${num!='1'?'s':''}`;
+  b.textContent=(open?'▾ Ocultar':'▸ Ver')+' '+num+' '+label;
+}
+
+function setChartFilter(t){chartFilter=t;refresh();}
+function setTableFilter(t){tableFilter=t;refresh();}
+
+/* ── Reconocimiento automático de zona por SPM ── */
+/* Zona 1: 16-17 spm (ideal 17) · Zona 2: 18-20 spm (ideal 19) */
+function suggestZone(spm){
+  if(!spm) return null;
+  if(spm===17) return {cat:"z1",label:"Zona 1",confidence:"ideal (17 spm)"};
+  if(spm===16) return {cat:"z1",label:"Zona 1",confidence:"16 spm"};
+  if(spm===19) return {cat:"z2",label:"Zona 2",confidence:"ideal (19 spm)"};
+  if(spm===18||spm===20) return {cat:"z2",label:"Zona 2",confidence:spm+" spm"};
+  return null;
+}
+
+function updateZoneHint(){
+  const spm=parseInt(document.getElementById("f-spm").value)||0;
+  const sug=suggestZone(spm);
+  const box=document.getElementById("zone-suggestion");
+  if(sug){
+    box.textContent="Sugerido: "+sug.label+" · "+sug.confidence;
+    box.classList.add("hasSuggestion");
+  }else if(spm){
+    box.textContent=spm+" spm no coincide con Zona 1 (16-17) ni Zona 2 (18-20).";
+    box.classList.remove("hasSuggestion");
+  }else{
+    box.textContent="Sin sugerencia todavía";
+    box.classList.remove("hasSuggestion");
+  }
+}
+
+function applyZoneSuggestion(){
+  const spm=parseInt(document.getElementById("f-spm").value)||0;
+  const sug=suggestZone(spm);
+  if(!sug){
+    showToast("Ingresá un SPM entre 16 y 20 para sugerir zona.");
+    return;
+  }
+  document.getElementById("f-cat").value=sug.cat;
+  showToast("Zona aplicada: "+sug.label);
+}
+
+/* ── Importar datos desde código generado por IA ── */
+function copyAiPrompt(){
+  const prompt=`Analizá la foto de la pantalla del monitor Concept2 (PM5) que te voy a mandar y devolveme SOLO un bloque de código JSON (sin texto adicional, sin explicación) con esta estructura exacta:
+
+{
+  "date": "AAAA-MM-DD",
+  "type": "texto corto del entrenamiento, ej: 2000m o 30:00",
+  "meters": numero_de_metros_totales,
+  "split": "M:SS.d /500m, ej: 2:05.3 (o W123 si está en watts)",
+  "totaltime": "tiempo total M:SS o H:MM:SS",
+  "spm": numero_de_paladas_por_minuto_promedio,
+  "cat": "z1 | z2 | intervals | sprint | test | watts",
+  "parciales": [
+    {"time":"tiempo acumulado M:SS.d","meters":metros_del_tramo,"split":"split /500m del tramo","spm":spm_del_tramo}
+  ]
+}
+
+Si la pantalla no muestra parciales, dejá "parciales" como un array vacío []. No inventes datos que no se vean en la foto.`;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(prompt).then(()=>{
+      showToast("Instrucciones copiadas. Pegalas junto con la foto en tu IA.");
+    }).catch(()=>{
+      showToast("No se pudo copiar automáticamente. Copiá el texto manualmente.");
+    });
+  }else{
+    showToast("Tu navegador no permite copiar automáticamente.");
+  }
+}
+
+function loadFromAiCode(){
+  const raw=document.getElementById("ai-code-input").value.trim();
+  if(!raw){showToast("Pegá primero el código que te dio la IA.");return;}
+
+  let data;
+  try{
+    const cleaned=raw.replace(/```json/gi,"").replace(/```/g,"").trim();
+    data=JSON.parse(cleaned);
+  }catch(err){
+    showToast("Ese texto no es un JSON válido. Revisá que se haya copiado completo.");
+    return;
+  }
+
+  if(data.date) document.getElementById("f-date").value=data.date;
+  if(data.type) document.getElementById("f-type").value=data.type;
+  if(data.meters) document.getElementById("f-meters").value=data.meters;
+  if(data.split) document.getElementById("f-split").value=data.split;
+  if(data.totaltime) document.getElementById("f-totaltime").value=data.totaltime;
+  if(data.spm) document.getElementById("f-spm").value=data.spm;
+  if(data.cat) document.getElementById("f-cat").value=data.cat;
+  updateZoneHint();
+
+  document.getElementById("parciales-container").innerHTML="";
+  parcialCount=0;
+  if(Array.isArray(data.parciales) && data.parciales.length){
+    data.parciales.forEach(p=>addParcialRow(p));
+  }else{
+    addParcialRow();
+  }
+
+  document.getElementById("ai-code-input").value="";
+  showToast("Datos cargados en el formulario. Revisá antes de guardar.");
+}
+
+/* Parciales del formulario */
+let parcialCount=0;
+
+function addParcialRow(data={}){
+  parcialCount++;
+  const n=parcialCount;
+  const div=document.createElement('div');
+  div.className='partial';
+  div.id='pr-'+n;
+  div.innerHTML=`
+    <span class="tramoLabel">Tramo ${n}</span>
+    <input type="text" placeholder="4:00.0" value="${data.time||''}" title="Tiempo acumulado">
+    <input type="number" placeholder="851" value="${data.meters||''}" title="Metros">
+    <input type="text" placeholder="2:21.0" value="${data.split||''}" title="Split /500m">
+    <input type="number" placeholder="18" value="${data.spm||''}" title="SPM">
+    <button type="button" class="removeRow" onclick="document.getElementById('pr-${n}').remove(); reindexParcials();">✕</button>`;
+  document.getElementById('parciales-container').appendChild(div);
+}
+
+function reindexParcials(){
+  const rows=document.querySelectorAll('#parciales-container .partial');
+  parcialCount=0;
+  rows.forEach((row)=>{
+    parcialCount++;
+    const span=row.querySelector('.tramoLabel');
+    if(span) span.textContent=`Tramo ${parcialCount}`;
+  });
+}
+
+/* ── Edición de sesiones guardadas ── */
+let editingKey=null; // {iso,type,meters} de la sesión original que se está editando
+
+function editSession(iso,type,meters){
+  const entry=DB.find(w=>w.iso===iso&&w.type===type&&w.meters===meters);
+  if(!entry){showToast("No se encontró la sesión.");return;}
+
+  editingKey={iso,type,meters};
+
+  document.getElementById("f-date").value=entry.iso;
+  document.getElementById("f-type").value=entry.type;
+  document.getElementById("f-meters").value=entry.meters;
+  document.getElementById("f-split").value=entry.split;
+  document.getElementById("f-totaltime").value=entry.totaltime||"";
+  document.getElementById("f-spm").value=entry.spm||"";
+  document.getElementById("f-cat").value=entry.cat;
+  updateZoneHint();
+
+  document.getElementById("parciales-container").innerHTML="";
+  parcialCount=0;
+  if(entry.parciales && entry.parciales.length){
+    entry.parciales.forEach(p=>addParcialRow(p));
+  }else{
+    addParcialRow();
+  }
+
+  document.getElementById("edit-banner").style.display="flex";
+  document.getElementById("btn-add-session").textContent="Guardar cambios";
+  document.getElementById("train-title").textContent="Editar sesión";
+
+  changePage("train");
+  showToast("Editando sesión — modificá los campos y guardá.");
+}
+
+function cancelEdit(){
+  editingKey=null;
+  document.getElementById("edit-banner").style.display="none";
+  document.getElementById("btn-add-session").textContent="Agregar trabajo";
+  document.getElementById("train-title").textContent="Train";
+  document.getElementById("f-type").value="";
+  document.getElementById("f-meters").value="";
+  document.getElementById("f-split").value="";
+  document.getElementById("f-totaltime").value="";
+  document.getElementById("f-spm").value="";
+  document.getElementById("parciales-container").innerHTML="";
+  parcialCount=0;
+  addParcialRow();
+  updateZoneHint();
+}
+
+async function addSession(){
+  const iso = document.getElementById("f-date").value;
+  const type = document.getElementById("f-type").value.trim();
+  const meters = parseInt(document.getElementById("f-meters").value) || 0;
+  const split = document.getElementById("f-split").value.trim();
+  const totaltime = document.getElementById("f-totaltime").value.trim();
+  const spm = parseInt(document.getElementById("f-spm").value) || 0;
+  const cat = document.getElementById("f-cat").value;
+
+  if(!iso || !type || !meters || !split){
+    showToast("Completá fecha, tipo, metros y split.");
+    return;
+  }
+  if(!validSplit(split)){
+    showToast("Formato inválido de split.");
+    return;
+  }
+
+  const parciales = [...document.querySelectorAll("#parciales-container .partial")].map(r => {
+    const labelText = r.querySelector('.tramoLabel').textContent;
+    const ins = r.querySelectorAll("input");
+    return {
+      label: labelText,
+      time: ins[0].value.trim(),
+      meters: parseInt(ins[1].value) || 0,
+      split: ins[2].value.trim(),
+      spm: parseInt(ins[3].value) || 0
+    };
+  }).filter(p => p.time || p.meters || p.split);
+
+  const months = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  const [y, m, d] = iso.split("-");
+  const dateStr = `${d} ${months[parseInt(m)-1]} ${y}`;
+
+  const entry = { iso, date: dateStr, type, meters, split, totaltime, spm, cat, parciales };
+
+  document.getElementById("api-status").textContent = "Guardando en Google Sheets...";
+
+  // Si se estaba editando, primero eliminamos el registro previo de Google Sheets
+  if(editingKey){
+    await postToApi("delete", editingKey);
+    cancelEdit();
+  }
+
+  // Guardar nueva fila en Google Sheets
+  await postToApi("add", { session: entry });
+
+  // Recargar todo directamente desde Google Sheets
+  await loadFromCloud();
+
+  // Limpiar formulario
+  document.getElementById("f-type").value = "";
+  document.getElementById("f-meters").value = "";
+  document.getElementById("f-split").value = "";
+  document.getElementById("f-totaltime").value = "";
+  document.getElementById("f-spm").value = "";
+  document.getElementById("parciales-container").innerHTML = "";
+  parcialCount = 0;
+  addParcialRow();
+
+  showToast("Guardado en Google Sheets ✓");
+}
+
+let pendingDelete=null;
+
+function deleteSession(iso,type,meters){
+  const entry=DB.find(w=>w.iso===iso&&w.type===type&&w.meters===meters);
+  if(!entry) return;
+  pendingDelete={iso,type,meters};
+  document.getElementById("delete-session-desc").textContent=
+    `${entry.date} · ${entry.type} · ${entry.meters.toLocaleString()}m`;
+  const input=document.getElementById("delete-confirm-input");
+  input.value="";
+  document.getElementById("delete-confirm-btn").disabled=true;
+  document.getElementById("delete-session-overlay").classList.add("show");
+  setTimeout(()=>input.focus(),50);
+}
+
+function checkDeleteConfirmInput(){
+  const val=document.getElementById("delete-confirm-input").value.trim().toUpperCase();
+  document.getElementById("delete-confirm-btn").disabled = (val!=="ELIMINAR");
+}
+
+function cancelDeleteSession(){
+  pendingDelete=null;
+  document.getElementById("delete-session-overlay").classList.remove("show");
+}
+
+async function confirmDeleteSession(){
+  if(!pendingDelete) return;
+  const { iso, type, meters } = pendingDelete;
+
+  document.getElementById("api-status").textContent = "Eliminando en Google Sheets...";
+
+  // Borrar en Google Sheets
+  await postToApi("delete", { iso, type, meters });
+
+  // Recargar estado real desde la nube
+  await loadFromCloud();
+
+  showToast("Sesión eliminada ✓");
+
+  pendingDelete = null;
+  document.getElementById("delete-session-overlay").classList.remove("show");
+}
+
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(DB,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download="stroke_journal.json";a.click();URL.revokeObjectURL(url);showToast("stroke_journal.json guardado.");
+}
+
+function importJSON(e){
+  const file=e.target.files[0];if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(!Array.isArray(data))throw new Error();DB=data;saveLS();refresh();showToast(data.length+" sesiones importadas ✓");}catch(err){showToast("Error: archivo JSON inválido.");}};
+  reader.readAsText(file);e.target.value="";
+}
+
+/* ── Importar backup RowCoach AI ── */
+function rcGuessCat(work, zone){
+  const w=(work||"").toString();
+  const z=(zone||"").toString().toUpperCase();
+  const isInterval=/[×x]/i.test(w) && /\d/.test(w);
+  if(isInterval) return "intervals";
+  if(/Z?5|\bAN\b|SPRINT|MAX/.test(z)) return "sprint";
+  if(/Z?4|\bTR\b|THR|\bAT\b/.test(z)) return "intervals";
+  if(/Z?3/.test(z)) return "intervals";
+  return "steady";
+}
+function rcPaceStr(timeSec, meters){
+  if(!meters) return "";
+  return fmtSec(timeSec/meters*500);
+}
+function rcAvgSpm(splits){
+  if(!splits || !splits.length) return 0;
+  let prevT=0, totalT=0, weighted=0;
+  splits.forEach(sp=>{
+    const segT=Math.max((sp.accTimeSeconds||0)-prevT,0);
+    weighted += (sp.rpm||0)*segT;
+    totalT += segT;
+    prevT = sp.accTimeSeconds||prevT;
+  });
+  if(totalT<=0) return Math.round(splits.reduce((a,b)=>a+(b.rpm||0),0)/splits.length);
+  return Math.round(weighted/totalT);
+}
+function rcParciales(splits){
+  if(!splits || splits.length<2) return null;
+  let prevT=0, prevM=0;
+  return splits.map(sp=>{
+    const segT=Math.max((sp.accTimeSeconds||0)-prevT,0);
+    const segM=Math.max((sp.accMeters||0)-prevM,0);
+    prevT=sp.accTimeSeconds||prevT; prevM=sp.accMeters||prevM;
+    return {label:String(sp.number), time:fmtSec(sp.accTimeSeconds||0), meters:segM, split:segM>0?rcPaceStr(segT,segM):"", spm:sp.rpm||0};
+  });
+}
+function convertRowCoachTraining(t){
+  const iso=t.date;
+  const meters=t.totalMeters;
+  const timeSec=t.totalTimeSeconds;
+  const type=t.work;
+  if(!iso || !meters || !timeSec || !type) return null;
+  const row={
+    iso, date:fmtDate(iso), type, meters,
+    split:rcPaceStr(timeSec, meters),
+    spm:rcAvgSpm(t.splits),
+    cat:rcGuessCat(type, t.zone)
+  };
+  row.totaltime=fmtTotal(timeSec);
+  const parciales=rcParciales(t.splits);
+  if(parciales) row.parciales=parciales;
+  return row;
+}
+function importRowCoachJSON(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const backup=JSON.parse(ev.target.result);
+      const trainings=(backup && backup.data && Array.isArray(backup.data.trainings)) ? backup.data.trainings : null;
+      if(!trainings) throw new Error("Formato no reconocido");
+      let added=0, skipped=0;
+      trainings.forEach(t=>{
+        const row=convertRowCoachTraining(t);
+        if(!row){ skipped++; return; }
+        const dup=DB.some(w=>w.iso===row.iso && w.type===row.type && w.meters===row.meters && w.split===row.split);
+        if(dup){ skipped++; return; }
+        DB.push(row); added++;
+      });
+      saveLS(); refresh();
+      showToast(added+" sesiones importadas desde RowCoach"+(skipped?(" ("+skipped+" omitidas)"):"")+" ✓");
+    }catch(err){
+      showToast("Error: backup de RowCoach inválido.");
+    }
+  };
+  reader.readAsText(file); e.target.value="";
+}
+
+function exportCSV(){
+  const header="Fecha ISO,Fecha,Tipo,Metros,Split /500m,T.Total,SPM,Categoría\n";
+  const rows=DB.map(w=>`${w.iso},"${w.date}","${w.type}",${w.meters},"${w.split}","${w.totaltime||''}",${w.spm},${w.cat}`).join("\n");
+  const blob=new Blob([header+rows],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download="stroke_journal.csv";a.click();URL.revokeObjectURL(url);showToast("CSV exportado.");
+}
+
+function showClearConfirm(){document.getElementById("clear-overlay").classList.add("show");}
+function clearDB(){DB=[...ORIGINAL];saveLS();refresh();document.getElementById("clear-overlay").classList.remove("show");showToast("Base de datos reseteada.");}
+
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2800);}
+
+document.getElementById("f-date").value=new Date().toISOString().slice(0,10);
+init();
+</script>
+
+</body>
+</html>
