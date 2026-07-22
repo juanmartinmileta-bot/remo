@@ -1322,20 +1322,9 @@ function loadLS(){try{const raw=localStorage.getItem(LS_KEY);if(raw){DB=JSON.par
 /* ── Conexión a Google Sheets (API vía Apps Script) ── */
 const API_URL =
 "https://script.google.com/macros/s/AKfycbxFemVV4Ws0sIm838ej7cfa4T7rtN-ACz5XN_A7549ng10ufgkNAY474BbMWHZ9ozBF7A/exec";
-let API_URL=localStorage.getItem(API_KEY)||"";
 
-function saveApiUrl(){
-  const val=document.getElementById("api-url-input").value.trim();
-  if(!val){showToast("Pegá primero la URL de tu Apps Script.");return;}
-  if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(val)){
-    showToast("Esa URL no parece terminar en /exec. Revisá la implementación.");
-    return;
-  }
-  API_URL=val;
-  localStorage.setItem(API_KEY,API_URL);
-  updateApiStatusUI();
-  syncNow();
-}
+
+
 
 function disconnectApi(){
   API_URL="";
@@ -1462,12 +1451,11 @@ let chartFilter="avg_z2",tableFilter="todos",areaChart=null,lastSorted=[];
 async function init(){
   if(!loadLS()){DB=[...ORIGINAL];saveLS();}
   refresh();
-  addParcialRow();
-  document.getElementById("nav-home").classList.add("navActive");
-  updateApiStatusUI();
-  if(API_URL){
-    document.getElementById("api-status").textContent="Conectado a "+shortUrl(API_URL)+" · sincronizando…";
-    await syncNow();
+
+document.getElementById("api-status").textContent =
+    "Conectado a Google Sheets";
+
+await syncNow();
   }
 }
 
