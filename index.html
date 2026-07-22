@@ -1320,7 +1320,8 @@ function saveLS(){localStorage.setItem(LS_KEY,JSON.stringify(DB));}
 function loadLS(){try{const raw=localStorage.getItem(LS_KEY);if(raw){DB=JSON.parse(raw);return true;}}catch(e){}return false;}
 
 /* ── Conexión a Google Sheets (API vía Apps Script) ── */
-const API_KEY="remo_api_url";
+const API_URL =
+"https://script.google.com/macros/s/AKfycbxFemVV4Ws0sIm838ej7cfa4T7rtN-ACz5XN_A7549ng10ufgkNAY474BbMWHZ9ozBF7A/exec";
 let API_URL=localStorage.getItem(API_KEY)||"";
 
 function saveApiUrl(){
